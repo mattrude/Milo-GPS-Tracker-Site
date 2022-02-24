@@ -4,10 +4,12 @@
 	
 	<title>The Odin Network Tracker</title>
 
+    <!--<meta http-equiv="refresh" content="15">-->
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
 
     <link rel="stylesheet"
         href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -52,10 +54,10 @@
 $db = new SQLite3('tracks.sqlite');
 
 // Create tables
-#$db->exec("CREATE TABLE locations (date TEXT, id TEXT, latitude TEXT, longitude TEXT, altitude TEXT, battery TEXT)");
+$db->exec("CREATE TABLE IF NOT EXISTS locations (date TEXT, id TEXT, latitude TEXT, longitude TEXT, altitude TEXT, battery TEXT)");
 
 // The Query
-$stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM locations', true);
+$stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM locations WHERE latitude IS NOT NULL AND date >= DateTime(\'now\',\'-5 minutes\') ORDER BY date DESC LIMIT 1', true);
 
 
 ?>
@@ -72,16 +74,20 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 	var mbAttr = 'The Odin Network GPS Tracker';
 	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
+	var outdoors = L.tileLayer(mbUrl, {id: 'mapbox/outdoors-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
+	var satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var streets = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 
 	var map = L.map('map', {
 		center: [<?php echo $stmt['latitude']; ?>, <?php echo $stmt['longitude']; ?>],
 		zoom: 19,
-		layers: [streets, neighbors, radius]
+		layers: [outdoors, neighbors, radius]
 	});
 
 	var baseLayers = {
+        'Outdoors': outdoors,
+        'Satellite': satellite,
 		'Streets': streets,
 		'Grayscale': grayscale
 	};
