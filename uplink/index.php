@@ -18,7 +18,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS locations (date TEXT, id TEXT, latitude TE
 // Insert values into table
 $db->exec("INSERT INTO locations VALUES ('$date', '$id', '$lat', '$lon', '$altitude', '$battery')");
 
-$db->exec("DELETE FROM locations WHERE date >= DateTime('now','-30 days')");
+$db->exec("DELETE FROM locations WHERE date <= DateTime('now','-30 days')");
 
 $db->close();
 
