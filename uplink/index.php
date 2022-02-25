@@ -10,13 +10,15 @@ $battery = $data["uplink_message"]["decoded_payload"]["battery"];
 $altitude = $data["uplink_message"]["decoded_payload"]["altitude"];
 
 // Create or open (if exists) the database
-$db = new SQLite3('tracks.sqlite');
+$db = new SQLite3('../tracks.sqlite');
 
 // Create tables
 $db->exec("CREATE TABLE IF NOT EXISTS locations (date TEXT, id TEXT, latitude TEXT, longitude TEXT, altitude TEXT, battery TEXT)");
 
 // Insert values into table
 $db->exec("INSERT INTO locations VALUES ('$date', '$id', '$lat', '$lon', '$altitude', '$battery')");
+
+$db->exec("DELETE FROM locations WHERE date >= DateTime('now','-30 days')");
 
 $db->close();
 
