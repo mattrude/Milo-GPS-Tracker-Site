@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 $id = $data["end_device_ids"]["device_id"];
@@ -15,10 +17,12 @@ $db = new SQLite3('../tracks.sqlite');
 // Create tables
 $db->exec("CREATE TABLE IF NOT EXISTS locations (date TEXT, id TEXT, latitude TEXT, longitude TEXT, altitude TEXT, battery TEXT)");
 
-// Insert values into table
-$db->exec("INSERT INTO locations VALUES ('$date', '$id', '$lat', '$lon', '$altitude', '$battery')");
+if ( ! is_null($lat) ) {
+    // Insert values into table
+    $db->exec("INSERT INTO locations VALUES ('$date', '$id', '$lat', '$lon', '$altitude', '$battery')");
 
-$db->exec("DELETE FROM locations WHERE date <= DateTime('now','-30 days')");
+    $db->exec("DELETE FROM locations WHERE date <= DateTime('now','-30 days')");
+}
 
 $db->close();
 
