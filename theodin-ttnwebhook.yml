@@ -1,0 +1,11 @@
+template-id: theodin
+name: The Odin Network GPS Mapper
+description: An independent LoRaWAN gps mapper service.
+logo-url: https://map.theodin.network/images/icon.png
+info-url: https://theodin.network/about/
+documentation-url: https://theodin.network/docs/
+create-downlink-api-key: true
+format: json
+base-url: https://map.theodin.network
+paths:
+  uplink-message: /uplink/
