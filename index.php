@@ -92,16 +92,13 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
   	var neighbors = L.layerGroup();
   	var radius = L.layerGroup();
 
-	var mbAttr = 'The Odin Network GPS Tracker';
-	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-
 	var mBeaverDam = L.marker([46.340678, -92.756060]).bindPopup('The Beaver Dam').addTo(attractions);
 	var mDock = L.marker([46.343536, -92.755585]).bindPopup('Lake Dock').addTo(attractions);
 	var mPorch = L.marker([46.338904, -92.752737]).bindPopup('River Porch').addTo(attractions);
 	var mBridge = L.marker([46.337540, -92.753455]).bindPopup('River Bridge').addTo(attractions);
 
-    var mMarkLydia = L.marker([46.343635, -92.753083],{icon: neighborsIcon}).bindPopup('Mark & Lydia\'s Cabin').addTo(neighbors);
-	var mMikeSandy = L.marker([46.340010, -92.753600],{icon: neighborsIcon}).bindPopup('Mike & Sandy\'s House').addTo(neighbors);
+	var mbAttr = 'The Odin Network GPS Tracker';
+	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
 	var outdoors = L.tileLayer(mbUrl, {id: 'mapbox/outdoors-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
@@ -160,6 +157,9 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
     var mHome = L.marker([46.339887, -92.752064], {
         icon: homeIcon
     }).addTo(map).bindPopup('<b>The Cabin!</b><br />84275 Jackpine Ln.<br />Sturgeon Lake, MN 55783');
+
+    var mMarkLydia = L.marker([46.343635, -92.753083],{icon: neighborsIcon}).bindPopup('Mark & Lydia\'s Cabin').addTo(neighbors);
+	var mMikeSandy = L.marker([46.340010, -92.753600],{icon: neighborsIcon}).bindPopup('Mike & Sandy\'s House').addTo(neighbors);
 
     /*
     var circle = L.circle([46.339384, -92.752046], {
