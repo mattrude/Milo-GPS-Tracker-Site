@@ -4,22 +4,21 @@
 	
 	<title>The Odin Network Tracker</title>
 
-    <!--<meta http-equiv="refresh" content="15">-->
-
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
 
-    <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin="" />
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
         crossorigin="">
     </script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster-src.js"></script>
@@ -64,6 +63,23 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 <div id="map" style="width: 100%; height: 100%;"></div>
 
 <script>
+    var dog;
+
+    function update_position() {
+        $.getJSON('https://map.theodin.network/downlink/', function(data) {
+            var lat = data["location"]["latitude"];
+            var log = data["location"]["longitude"];
+            var batt = data["battery"];
+            var datt = data["date"];
+            if (!dog) {
+                dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("I am Milo<br /><b>Battery:</b> ").addTo(map);
+            }
+            dog.setLatLng([lat,log]).update();
+            setTimeout(update_position, 15000);
+        });
+    }
+    
+    update_position();
 
   	var neighbors = L.layerGroup();
   	var radius = L.layerGroup();
@@ -122,13 +138,14 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
         iconSize:     [30, 30], // size of the icon
     });
 
-    var mMilo = L.marker([<?php echo $stmt['latitude']; ?>, <?php echo $stmt['longitude']; ?>], {
-        icon: dogBlackIcon
-    }).addTo(map).bindPopup('<b>Date:</b> <?php echo $stmt['date']; ?><br /><b>Battery:</b> <?php echo $stmt['battery']; ?>');
-
     var mHome = L.marker([46.339887, -92.752064], {
         icon: homeIcon
     }).addTo(map).bindPopup('<b>The Cabin!</b><br />84275 Jackpine Ln.<br />Sturgeon Lake, MN 55783');
+
+    /*
+    var mMilo = L.marker([<?php echo $dog; ?>], {
+        icon: dogBlackIcon
+    }).addTo(map).bindPopup('<b>Date:</b> <?php echo $stmt['date']; ?><br /><b>Battery:</b> <?php echo $stmt['battery']; ?>');
 
     /*
     var circle = L.circle([46.339384, -92.752046], {
