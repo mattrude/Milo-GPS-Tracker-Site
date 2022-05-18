@@ -88,6 +88,7 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
   	var neighbors = L.layerGroup();
   	var radius = L.layerGroup();
 
+	var mBeaverDam = L.marker([46.341850, -92.755370]).bindPopup('The Beaver Dam').addTo(neighbors);
 	var mMarkLydia = L.marker([46.343635, -92.753083]).bindPopup('Mark & Lydia\'s Cabin').addTo(neighbors);
 	var mMikeSandy = L.marker([46.340010, -92.753600]).bindPopup('Mike & Sandy\'s House').addTo(neighbors);
 
