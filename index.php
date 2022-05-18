@@ -76,7 +76,7 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
             var batt = data["battery"];
             var datt = data["date"];
             if (!dog) {
-                dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("I am Milo<br /><b>Battery:</b> ").addTo(map);
+                dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("I am Milo").addTo(map);
             }
             dog.setLatLng([lat,log]).update();
             setTimeout(update_position, 15000);
