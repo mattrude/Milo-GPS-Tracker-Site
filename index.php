@@ -79,7 +79,7 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
                 dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("I am Milo").addTo(map);
             }
             dog.setLatLng([lat,log]).update();
-            setTimeout(update_position, 15000);
+            setTimeout(update_position, 5000);
         });
     }
     
@@ -145,11 +145,6 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
     var mHome = L.marker([46.339887, -92.752064], {
         icon: homeIcon
     }).addTo(map).bindPopup('<b>The Cabin!</b><br />84275 Jackpine Ln.<br />Sturgeon Lake, MN 55783');
-
-    /*
-    var mMilo = L.marker([<?php echo $dog; ?>], {
-        icon: dogBlackIcon
-    }).addTo(map).bindPopup('<b>Date:</b> <?php echo $stmt['date']; ?><br /><b>Battery:</b> <?php echo $stmt['battery']; ?>');
 
     /*
     var circle = L.circle([46.339384, -92.752046], {
