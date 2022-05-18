@@ -85,10 +85,15 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
     
     update_position();
 
+  	var attractions = L.layerGroup();
   	var neighbors = L.layerGroup();
   	var radius = L.layerGroup();
 
-	var mBeaverDam = L.marker([46.341850, -92.755370]).bindPopup('The Beaver Dam').addTo(neighbors);
+	var mBeaverDam = L.marker([46.340678, -92.756060]).bindPopup('The Beaver Dam').addTo(attractions);
+	var mDock = L.marker([46.343536, -92.755585]).bindPopup('Lake Dock').addTo(attractions);
+	var mPorch = L.marker([46.338904, -92.752737]).bindPopup('River Porch').addTo(attractions);
+	var mBridge = L.marker([46.337540, -92.753455]).bindPopup('River Bridge').addTo(attractions);
+
 	var mMarkLydia = L.marker([46.343635, -92.753083]).bindPopup('Mark & Lydia\'s Cabin').addTo(neighbors);
 	var mMikeSandy = L.marker([46.340010, -92.753600]).bindPopup('Mike & Sandy\'s House').addTo(neighbors);
 
@@ -103,7 +108,7 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 	var map = L.map('map', {
 		center: [<?php echo $stmt['latitude']; ?>, <?php echo $stmt['longitude']; ?>],
 		zoom: 19,
-		layers: [outdoors, neighbors, radius]
+		layers: [outdoors, attractions, neighbors, radius]
 	});
 
 	var baseLayers = {
@@ -114,6 +119,7 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 	};
 
 	var overlays = {
+		'Attractions': attractions,
 		'Neighbors': neighbors,
         'Radius': radius
 	};
