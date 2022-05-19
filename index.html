@@ -51,24 +51,13 @@
 </head>
 
 <body>
-<?php
 
-// Create or open (if exists) the database
-$db = new SQLite3('tracks.sqlite');
-
-// Create tables
-$db->exec("CREATE TABLE IF NOT EXISTS locations (date TEXT, id TEXT, latitude TEXT, longitude TEXT, altitude TEXT, battery TEXT)");
-
-// The Query
-$stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM locations WHERE latitude IS NOT NULL AND date >= DateTime(\'now\',\'-5 minutes\') ORDER BY date DESC LIMIT 1', true);
-
-
-?>
 <div id="map" style="width: 100%; height: 100%;"></div>
 
 <script>
-    var BING_KEY = 'AheHzmme7YOPguCqfEDZ92oRYjpk6E_O9yS4wVmHFuCAsfI88NtgqlfzJKX_L7rz'
 
+	var mbAttr = 'The Odin Network GPS Tracker';
+	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
     var dog;
 
@@ -77,9 +66,9 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
             var lat = data["location"]["latitude"];
             var log = data["location"]["longitude"];
             var batt = data["battery"];
-            var datt = data["date"];
+            var updated = new Date(data["date"]);
             if (!dog) {
-                dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("I am Milo").addTo(map);
+                dog = L.marker([lat,log],{icon: dogBlackIcon}).bindPopup("<h2><center>Hi Mom, it's me Milo!</center></h2><b>Battery: </b>" + batt + "v<br />" + updated.toString('yyyy-MM-dd h:mm:ss (A)')).addTo(map);
             }
             dog.setLatLng([lat,log]).update();
             setTimeout(update_position, 5000);
@@ -97,17 +86,14 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 	var mPorch = L.marker([46.338904, -92.752737]).bindPopup('River Porch').addTo(attractions);
 	var mBridge = L.marker([46.337540, -92.753455]).bindPopup('River Bridge').addTo(attractions);
 
-	var mbAttr = 'The Odin Network GPS Tracker';
-	var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-
 	var outdoors = L.tileLayer(mbUrl, {id: 'mapbox/outdoors-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var satellite = L.tileLayer(mbUrl, {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var grayscale = L.tileLayer(mbUrl, {id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 	var streets = L.tileLayer(mbUrl, {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr,maxZoom:30,});
 
 	var map = L.map('map', {
-		center: [<?php echo $stmt['latitude']; ?>, <?php echo $stmt['longitude']; ?>],
-		zoom: 19,
+		center: [46.339887, -92.752064],
+		zoom: 18,
 		layers: [outdoors, attractions, neighbors, radius]
 	});
 
@@ -160,15 +146,6 @@ $stmt = $db->querySingle('SELECT date, id, latitude, longitude, battery FROM loc
 
     var mMarkLydia = L.marker([46.343635, -92.753083],{icon: neighborsIcon}).bindPopup('Mark & Lydia\'s Cabin').addTo(neighbors);
 	var mMikeSandy = L.marker([46.340010, -92.753600],{icon: neighborsIcon}).bindPopup('Mike & Sandy\'s House').addTo(neighbors);
-
-    /*
-    var circle = L.circle([46.339384, -92.752046], {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.10,
-        radius:3 
-    }).addTo(radius);
-    */
 
 	var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
